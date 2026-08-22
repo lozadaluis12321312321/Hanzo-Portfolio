@@ -51,45 +51,93 @@
 
     <!-- ==========================================================
          HERO / HOME SECTION
-         Introductory section with profile photo, intro, and dual CTAs
+         Introductory dashboard section with Bg1 background & glass panel
          ========================================================== -->
     <section id="home" class="hero-section">
         <div class="container hero-container">
-            <!-- Hero Content (Text & Buttons) -->
-            <div class="hero-text-content">
-                <div class="hero-badge">
-                    <span class="badge-dot"></span>
-                    BSIT Student &amp; Aspiring IT Professional
+            <div class="hero-glass-panel">
+                <!-- Hero Content (Text & Buttons) -->
+                <div class="hero-text-content">
+                    <div class="hero-badge">
+                        <span class="badge-dot"></span>
+                        BSIT Student &amp; Aspiring IT Professional
+                    </div>
+                    <h1 class="hero-title">
+                        Hi, I'm <span class="highlight">Luis Agastine Lozada</span>
+                    </h1>
+                    <p class="hero-description">
+                        Welcome to my personal portfolio. I'm a 3rd-year Bachelor of Science in Information Technology
+                        student at Adamson University with a passion for web development, software programming, and
+                        practical technology solutions.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#projects" class="btn btn-primary">
+                            <span>View My Projects</span>
+                            <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+                        <a href="#contact" class="btn btn-secondary">
+                            <span>Contact Me</span>
+                        </a>
+                    </div>
                 </div>
-                <h1 class="hero-title">
-                    Hi, I'm <span class="highlight">Luis Agastine Lozada</span>
-                </h1>
-                <p class="hero-description">
-                    Welcome to my personal portfolio. I'm a 3rd-year Bachelor of Science in Information Technology
-                    student at Adamson University with a passion for web development, software programming, and
-                    practical technology solutions.
-                </p>
-                <div class="hero-actions">
-                    <a href="#projects" class="btn btn-primary">
-                        <span>View My Projects</span>
-                        <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </a>
-                    <a href="#contact" class="btn btn-secondary">
-                        <span>Contact Me</span>
-                    </a>
-                </div>
-            </div>
 
-            <!-- Hero Image with subtle orange glow background -->
-            <div class="hero-image-wrapper">
-                <div class="glow-backdrop"></div>
-                <div class="hero-image-box">
-                    <!-- PROFILE PHOTO: Replace 'images/Profile.jpg' with your photo path if needed -->
-                    <img src="images/Profile.jpg" alt="Luis Agastine Lozada Profile Photo" class="hero-photo">
+                <!-- Hero Image with 3D Holographic Showcase & Interactive Hover Effects -->
+                <div class="hero-image-wrapper" id="heroCardContainer">
+                    <div class="hero-stage-glow"></div>
+                    <div class="hero-card-3d" id="heroCard3D">
+                        <div class="hero-card-inner">
+                            <!-- Tech Corner Accents -->
+                            <span class="hero-corner tl"></span>
+                            <span class="hero-corner tr"></span>
+                            <span class="hero-corner bl"></span>
+                            <span class="hero-corner br"></span>
+
+                            <!-- Top Ribbon -->
+                            <div class="hero-badge-ribbon">
+                                <span class="ribbon-icon">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <polygon
+                                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                                        </polygon>
+                                    </svg>
+                                </span>
+                                <span>Featured IT Profile</span>
+                            </div>
+
+                            <!-- Circular 3D Image Stage with Shimmering Gradient Ring & Frame -->
+                            <div class="hero-image-stage">
+                                <div class="hero-image-frame">
+                                    <!-- Profile Photo (Circle) -->
+                                    <img src="images/Profile.jpg" alt="Luis Agastine Lozada Profile Photo" class="hero-photo">
+
+                                    <!-- Shimmering Laser Light Sweep -->
+                                    <div class="hero-light-sweep"></div>
+                                </div>
+
+                                <!-- Floating Status Seal Badge -->
+                                <div class="hero-status-seal">
+                                    <span class="status-pulse-dot"></span>
+                                    <span>BSIT Specialist</span>
+                                </div>
+                            </div>
+
+                            <!-- Card Bottom Status Bar -->
+                            <div class="hero-card-footer">
+                                <div class="hero-footer-status">
+                                    <span class="status-pulse-dot"></span>
+                                    <span>Open to Opportunities</span>
+                                </div>
+                                <span class="hero-org-tag">Adamson Univ</span>
+                            </div>
+                        </div>
+
+                        <!-- Holographic Dynamic Glare Sheen -->
+                        <div class="hero-glare" id="heroGlare"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -369,6 +417,7 @@
             <div class="cert-showcase">
                 <!-- Left: Interactive 3D Certificate Holographic Display -->
                 <div class="cert-card-container" id="certCardContainer">
+                    <div class="cert-stage-glow"></div>
                     <div class="cert-card-3d" id="certCard3D">
                         <div class="cert-card-inner">
                             <!-- Top Ribbon -->
@@ -383,23 +432,47 @@
                                 <span>Official Specialist Credential</span>
                             </div>
 
-                            <!-- Certificate Image Frame with Hover Overlay -->
-                            <div class="cert-image-frame" id="certPreviewTrigger" role="button" tabindex="0"
-                                aria-label="Open Certificate Full Resolution Preview">
-                                <img src="images/Certi.jpg"
-                                    alt="Information Technology Specialist: Databases Certificate Awarded to Luis Agastine Bautista Lozada"
-                                    class="cert-preview-img">
-                                <div class="cert-hover-overlay">
-                                    <div class="cert-zoom-btn">
-                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <circle cx="11" cy="11" r="8"></circle>
-                                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                            <line x1="11" y1="8" x2="11" y2="14"></line>
-                                            <line x1="8" y1="11" x2="14" y2="11"></line>
+                            <!-- Certificate Image Frame with Holographic Stage & Standout Effects -->
+                            <div class="cert-image-stage">
+                                <div class="cert-image-frame" id="certPreviewTrigger" role="button" tabindex="0"
+                                    aria-label="Open Certificate Full Resolution Preview">
+                                    <!-- Floating Tech Corner Accents -->
+                                    <span class="cert-corner tl"></span>
+                                    <span class="cert-corner tr"></span>
+                                    <span class="cert-corner bl"></span>
+                                    <span class="cert-corner br"></span>
+
+                                    <!-- Floating Certified Hologram Seal -->
+                                    <div class="cert-gold-seal">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                            <polygon
+                                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                                            </polygon>
                                         </svg>
-                                        <span>Click to Inspect High-Res</span>
+                                        <span>Verified IT Specialist</span>
+                                    </div>
+
+                                    <!-- Certificate Photo -->
+                                    <img src="images/Certi.jpg"
+                                        alt="Information Technology Specialist: Databases Certificate Awarded to Luis Agastine Bautista Lozada"
+                                        class="cert-preview-img">
+
+                                    <!-- Shimmering Light Sweep Effect -->
+                                    <div class="cert-light-sweep"></div>
+
+                                    <!-- Hover Zoom Overlay -->
+                                    <div class="cert-hover-overlay">
+                                        <div class="cert-zoom-btn">
+                                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <circle cx="11" cy="11" r="8"></circle>
+                                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                                <line x1="11" y1="8" x2="11" y2="14"></line>
+                                                <line x1="8" y1="11" x2="14" y2="11"></line>
+                                            </svg>
+                                            <span>Inspect High-Res Credential</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

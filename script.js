@@ -87,24 +87,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ----------------------------------------------------------
-       4. 3D CERTIFICATE CARD TILT & HOLOGRAPHIC GLARE EFFECT
+       4. REUSABLE 3D CARD TILT & HOLOGRAPHIC GLARE EFFECT
+       Used for both the Hero Profile Card & Certificate Showcase
        ---------------------------------------------------------- */
-    const certCardContainer = document.getElementById('certCardContainer');
-    const certCard3D = document.getElementById('certCard3D');
-    const certGlare = document.getElementById('certGlare');
+    function setup3DCardTilt(containerId, cardId, glareId, maxTilt = 10) {
+        const container = document.getElementById(containerId);
+        const card = document.getElementById(cardId);
+        const glare = document.getElementById(glareId);
 
-    if (certCardContainer && certCard3D && certGlare) {
+        if (!container || !card || !glare) return;
+
         let isHovered = false;
 
-        certCardContainer.addEventListener('mouseenter', () => {
+        container.addEventListener('mouseenter', () => {
             isHovered = true;
-            certCard3D.style.transition = 'transform 0.1s ease-out, box-shadow 0.2s ease';
-            certGlare.style.opacity = '1';
+            card.style.transition = 'transform 0.1s ease-out, box-shadow 0.2s ease';
+            glare.style.opacity = '1';
         });
 
-        certCardContainer.addEventListener('mousemove', (e) => {
+        container.addEventListener('mousemove', (e) => {
             if (!isHovered) return;
-            const rect = certCardContainer.getBoundingClientRect();
+            const rect = container.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
 
@@ -112,24 +115,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const centerY = rect.height / 2;
 
             // Calculate rotation angles (smooth subtle 3D perspective tilt)
-            const rotateX = ((y - centerY) / centerY) * -10;
-            const rotateY = ((x - centerX) / centerX) * 10;
+            const rotateX = ((y - centerY) / centerY) * -maxTilt;
+            const rotateY = ((x - centerX) / centerX) * maxTilt;
 
-            certCard3D.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
 
             // Position holographic dynamic glare sheen
             const glareX = (x / rect.width) * 100;
             const glareY = (y / rect.height) * 100;
-            certGlare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.25) 0%, rgba(232, 154, 61, 0.18) 35%, transparent 70%)`;
+            glare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.45) 0%, rgba(56, 189, 248, 0.28) 35%, transparent 70%)`;
         });
 
-        certCardContainer.addEventListener('mouseleave', () => {
+        container.addEventListener('mouseleave', () => {
             isHovered = false;
-            certCard3D.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease';
-            certCard3D.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-            certGlare.style.opacity = '0';
+            card.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease';
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+            glare.style.opacity = '0';
         });
     }
+
+    // Initialize 3D tilt for Home Page Showcase & Certificate Showcase
+    setup3DCardTilt('heroCardContainer', 'heroCard3D', 'heroGlare', 11);
+    setup3DCardTilt('certCardContainer', 'certCard3D', 'certGlare', 10);
 
     /* ----------------------------------------------------------
        5. CERTIFICATE LIGHTBOX MODAL
