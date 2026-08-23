@@ -6,6 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luis Agastine Lozada | Portfolio</title>
 
+    <!-- Instant Theme Detection Script to prevent FOUC -->
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('portfolio-theme');
+            const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
     <!-- Google Fonts for Clean, Modern Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +30,7 @@
 
     <!-- ==========================================================
          NAVIGATION BAR
-         Sticky top navigation with responsive mobile toggle menu
+         Sticky top navigation with responsive mobile toggle menu & Dark Mode Switch
          ========================================================== -->
     <header class="header" id="navbar">
         <div class="nav-container">
@@ -30,14 +40,7 @@
                 <span class="logo-accent">.</span>
             </a>
 
-            <!-- Mobile Menu Toggle Button (Hamburger) -->
-            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
-
-            <!-- Navigation Links on the right -->
+            <!-- Navigation Links in the center/right -->
             <nav class="nav-links" id="navLinks">
                 <a href="#home" class="nav-link active">Home</a>
                 <a href="#about" class="nav-link">About</a>
@@ -46,14 +49,60 @@
                 <a href="#projects" class="nav-link">Projects</a>
                 <a href="#contact" class="nav-link">Contact</a>
             </nav>
+
+            <!-- Navbar Actions (Theme Toggle & Mobile Menu) -->
+            <div class="nav-actions">
+                <!-- Creative Dark / Light Theme Toggle Button -->
+                <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark and light theme" title="Switch Theme">
+                    <span class="theme-toggle-track">
+                        <span class="theme-toggle-thumb">
+                            <!-- Sun Icon (Light Mode Active) -->
+                            <svg class="theme-icon sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="4.5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3.5"></line>
+                                <line x1="12" y1="20.5" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.99" y2="5.99"></line>
+                                <line x1="18.01" y1="18.01" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3.5" y2="12"></line>
+                                <line x1="20.5" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.99" y2="18.01"></line>
+                                <line x1="18.01" y1="5.99" x2="19.78" y2="4.22"></line>
+                            </svg>
+                            <!-- Moon Icon (Dark Mode Active) -->
+                            <svg class="theme-icon moon-icon" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                        </span>
+                    </span>
+                </button>
+
+                <!-- Mobile Menu Toggle Button (Hamburger) -->
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+            </div>
         </div>
     </header>
 
     <!-- ==========================================================
          HERO / HOME SECTION
-         Introductory dashboard section with Bg1 background & glass panel
+         Introductory dashboard section with Bg2 background & creative transitions
          ========================================================== -->
     <section id="home" class="hero-section">
+        <!-- Creative Animated Dynamic Background Layers (Bg1 for Light Mode, Bg2 for Dark Mode) -->
+        <div class="hero-bg-media hero-bg-light" id="heroBgLight"></div>
+        <div class="hero-bg-media hero-bg-dark" id="heroBgDark"></div>
+        <div class="hero-bg-overlay"></div>
+        <div class="hero-ambient-glows">
+            <span class="ambient-orb orb-1"></span>
+            <span class="ambient-orb orb-2"></span>
+            <span class="ambient-orb orb-3"></span>
+        </div>
+
         <div class="container hero-container">
             <div class="hero-glass-panel">
                 <!-- Hero Content (Text & Buttons) -->

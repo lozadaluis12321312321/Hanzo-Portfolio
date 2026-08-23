@@ -1,17 +1,68 @@
 /**
  * ==========================================================
  * PERSONAL PORTFOLIO JAVASCRIPT
- * Clean, organized, and beginner-friendly scripts for:
- * 1. Mobile navigation menu toggle
- * 2. Active link highlight on scroll
- * 3. Contact form submission & feedback
+ * Clean, organized, and robust scripts for:
+ * 1. Dark Mode / Light Mode Theme Switching & LocalStorage Persistence
+ * 2. Mobile navigation menu toggle
+ * 3. Scroll spy (active navigation link highlight)
+ * 4. Contact form submission & feedback
+ * 5. Interactive 3D Perspective Card Tilt & Holographic Glare
+ * 6. Certificate Lightbox Modal & Zoom
+ * 7. Copy Credential Code to Clipboard
+ * 8. Dynamic Hero Background Parallax Interaction
  * ==========================================================
  */
 
 document.addEventListener('DOMContentLoaded', () => {
 
     /* ----------------------------------------------------------
-       1. MOBILE NAVIGATION TOGGLE
+       1. THEME TOGGLE (DARK MODE / LIGHT MODE SYSTEM)
+       ---------------------------------------------------------- */
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const rootElement = document.documentElement;
+    const STORAGE_KEY = 'portfolio-theme';
+
+    /**
+     * Apply theme to root and update aria/tooltip states
+     * @param {'dark' | 'light'} theme 
+     */
+    function applyTheme(theme) {
+        rootElement.setAttribute('data-theme', theme);
+        localStorage.setItem(STORAGE_KEY, theme);
+
+        if (themeToggleBtn) {
+            const isDark = theme === 'dark';
+            themeToggleBtn.setAttribute('aria-label', isDark ? 'Switch to Light theme' : 'Switch to Dark theme');
+            themeToggleBtn.setAttribute('title', isDark ? 'Switch to Light Theme' : 'Switch to Dark Theme');
+        }
+    }
+
+    // Determine current theme
+    const savedTheme = localStorage.getItem(STORAGE_KEY);
+    const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const activeTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+    applyTheme(activeTheme);
+
+    // Toggle button click listener
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = rootElement.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+        });
+    }
+
+    // Listen to system color scheme changes if user hasn't explicitly chosen one
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem(STORAGE_KEY)) {
+                applyTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+    }
+
+    /* ----------------------------------------------------------
+       2. MOBILE NAVIGATION TOGGLE
        ---------------------------------------------------------- */
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const navLinks = document.getElementById('navLinks');
@@ -34,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ----------------------------------------------------------
-       2. SCROLL SPY (ACTIVE NAVIGATION HIGHLIGHT)
+       3. SCROLL SPY (ACTIVE NAVIGATION HIGHLIGHT)
        ---------------------------------------------------------- */
     const sections = document.querySelectorAll('section[id]');
 
@@ -57,10 +108,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    window.addEventListener('scroll', updateActiveNav);
+    window.addEventListener('scroll', updateActiveNav, { passive: true });
 
     /* ----------------------------------------------------------
-       3. CONTACT FORM SUBMISSION
+       4. CONTACT FORM SUBMISSION
        ---------------------------------------------------------- */
     const contactForm = document.getElementById('contactForm');
     const formStatus = document.getElementById('formStatus');
@@ -87,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ----------------------------------------------------------
-       4. REUSABLE 3D CARD TILT & HOLOGRAPHIC GLARE EFFECT
+       5. REUSABLE 3D CARD TILT & HOLOGRAPHIC GLARE EFFECT
        Used for both the Hero Profile Card & Certificate Showcase
        ---------------------------------------------------------- */
     function setup3DCardTilt(containerId, cardId, glareId, maxTilt = 10) {
@@ -120,10 +171,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
 
-            // Position holographic dynamic glare sheen
+            // Position dynamic holographic glare sheen
             const glareX = (x / rect.width) * 100;
             const glareY = (y / rect.height) * 100;
-            glare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.45) 0%, rgba(56, 189, 248, 0.28) 35%, transparent 70%)`;
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                glare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.15) 38%, transparent 70%)`;
+            } else {
+                glare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.55) 0%, rgba(56, 189, 248, 0.3) 35%, transparent 70%)`;
+            }
         });
 
         container.addEventListener('mouseleave', () => {
@@ -139,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setup3DCardTilt('certCardContainer', 'certCard3D', 'certGlare', 10);
 
     /* ----------------------------------------------------------
-       5. CERTIFICATE LIGHTBOX MODAL
+       6. CERTIFICATE LIGHTBOX MODAL
        ---------------------------------------------------------- */
     const certModal = document.getElementById('certModal');
     const certPreviewTrigger = document.getElementById('certPreviewTrigger');
@@ -191,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* ----------------------------------------------------------
-       6. COPY CREDENTIAL CODE TO CLIPBOARD
+       7. COPY CREDENTIAL CODE TO CLIPBOARD
        ---------------------------------------------------------- */
     const btnCopyCode = document.getElementById('btnCopyCode');
     const credentialCode = document.getElementById('credentialCode');
@@ -228,6 +284,42 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (err) {
                 console.error('Failed to copy credential code:', err);
             }
+        });
+    }
+
+    /* ----------------------------------------------------------
+       8. DYNAMIC HERO BACKGROUND PARALLAX INTERACTION
+       Subtle interactive parallax for Bg2 & glowing ambient orbs
+       ---------------------------------------------------------- */
+    const heroSection = document.getElementById('home');
+    const heroBgMedias = document.querySelectorAll('.hero-bg-media');
+    const ambientOrbs = document.querySelectorAll('.ambient-orb');
+
+    if (heroSection && heroBgMedias.length > 0 && window.matchMedia('(pointer: fine)').matches) {
+        heroSection.addEventListener('mousemove', (e) => {
+            const rect = heroSection.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+            // Subtle parallax shift for all background media layers
+            heroBgMedias.forEach((bg) => {
+                bg.style.transform = `scale(1.05) translate(${(x * -18).toFixed(1)}px, ${(y * -14).toFixed(1)}px)`;
+            });
+
+            // Counter parallax shift for ambient orbs
+            ambientOrbs.forEach((orb, index) => {
+                const factor = (index + 1) * 12;
+                orb.style.transform = `translate(${(x * factor).toFixed(1)}px, ${(y * factor).toFixed(1)}px)`;
+            });
+        });
+
+        heroSection.addEventListener('mouseleave', () => {
+            heroBgMedias.forEach((bg) => {
+                bg.style.transform = '';
+            });
+            ambientOrbs.forEach((orb) => {
+                orb.style.transform = '';
+            });
         });
     }
 });
