@@ -9,7 +9,9 @@
  * 5. Interactive 3D Perspective Card Tilt & Holographic Glare
  * 6. Certificate Lightbox Modal & Zoom
  * 7. Copy Credential Code to Clipboard
- * 8. Dynamic Hero Background Parallax Interaction
+ * 8. Dynamic Hero Ambient Orb Parallax Interaction
+ * 9. Scroll Reveal Entrance Animations
+ * 10. Aurora Backdrop Scroll Parallax
  * ==========================================================
  */
 
@@ -190,21 +192,47 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Initialize 3D tilt for Home Page Showcase & Certificate Showcase
+    // Initialize 3D tilt for Home Page Showcase & both Certificate Showcases
     setup3DCardTilt('heroCardContainer', 'heroCard3D', 'heroGlare', 11);
     setup3DCardTilt('certCardContainer', 'certCard3D', 'certGlare', 10);
+    setup3DCardTilt('hackCardContainer', 'hackCard3D', 'hackGlare', 10);
 
     /* ----------------------------------------------------------
-       6. CERTIFICATE LIGHTBOX MODAL
+       6. CERTIFICATE LIGHTBOX MODAL (data-driven, supports multiple certs)
+       Any element with .cert-modal-trigger and data-cert-* attributes
+       populates and opens the shared lightbox.
        ---------------------------------------------------------- */
     const certModal = document.getElementById('certModal');
-    const certPreviewTrigger = document.getElementById('certPreviewTrigger');
-    const btnInspectCert = document.getElementById('btnInspectCert');
     const certModalClose = document.getElementById('certModalClose');
     const certModalBackdrop = document.getElementById('certModalBackdrop');
+    const certModalImage = document.getElementById('certModalImage');
+    const certModalTitle = document.getElementById('certModalTitle');
+    const certModalBadge = document.getElementById('certModalBadge');
+    const certModalMeta = document.getElementById('certModalMeta');
+    const certModalLink = document.getElementById('certModalLink');
+    const certModalLinkLabel = document.getElementById('certModalLinkLabel');
 
-    function openCertModal() {
+    function populateCertModal(trigger) {
+        const d = trigger.dataset;
+        if (certModalImage && d.certImg) {
+            certModalImage.src = d.certImg;
+            certModalImage.alt = d.certTitle || 'Certificate Full Resolution';
+        }
+        if (certModalTitle && d.certTitle) certModalTitle.textContent = d.certTitle;
+        if (certModalBadge && d.certBadge) certModalBadge.textContent = d.certBadge;
+        if (certModalMeta && d.certMeta) {
+            certModalMeta.innerHTML = d.certMeta
+                .split(' • ')
+                .map(part => `<span>${part}</span>`)
+                .join('<span class="modal-sep">•</span>');
+        }
+        if (certModalLink && d.certLink) certModalLink.href = d.certLink;
+        if (certModalLinkLabel && d.certLinkLabel) certModalLinkLabel.textContent = d.certLinkLabel;
+    }
+
+    function openCertModal(trigger) {
         if (!certModal) return;
+        if (trigger && trigger.dataset) populateCertModal(trigger);
         certModal.classList.add('active');
         certModal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
@@ -217,19 +245,17 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = '';
     }
 
-    if (certPreviewTrigger) {
-        certPreviewTrigger.addEventListener('click', openCertModal);
-        certPreviewTrigger.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                openCertModal();
-            }
-        });
-    }
-
-    if (btnInspectCert) {
-        btnInspectCert.addEventListener('click', openCertModal);
-    }
+    document.querySelectorAll('.cert-modal-trigger').forEach(trigger => {
+        trigger.addEventListener('click', () => openCertModal(trigger));
+        if (trigger.tagName !== 'BUTTON') {
+            trigger.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openCertModal(trigger);
+                }
+            });
+        }
+    });
 
     if (certModalClose) {
         certModalClose.addEventListener('click', closeCertModal);
@@ -288,25 +314,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ----------------------------------------------------------
-       8. DYNAMIC HERO BACKGROUND PARALLAX INTERACTION
-       Subtle interactive parallax for Bg2 & glowing ambient orbs
+       8. DYNAMIC HERO PARALLAX INTERACTION
+       Subtle interactive parallax for the glowing ambient orbs
        ---------------------------------------------------------- */
     const heroSection = document.getElementById('home');
-    const heroBgMedias = document.querySelectorAll('.hero-bg-media');
     const ambientOrbs = document.querySelectorAll('.ambient-orb');
 
-    if (heroSection && heroBgMedias.length > 0 && window.matchMedia('(pointer: fine)').matches) {
+    if (heroSection && ambientOrbs.length > 0 && window.matchMedia('(pointer: fine)').matches) {
         heroSection.addEventListener('mousemove', (e) => {
             const rect = heroSection.getBoundingClientRect();
             const x = (e.clientX - rect.left) / rect.width - 0.5;
             const y = (e.clientY - rect.top) / rect.height - 0.5;
 
-            // Subtle parallax shift for all background media layers
-            heroBgMedias.forEach((bg) => {
-                bg.style.transform = `scale(1.05) translate(${(x * -18).toFixed(1)}px, ${(y * -14).toFixed(1)}px)`;
-            });
-
-            // Counter parallax shift for ambient orbs
+            // Parallax shift for ambient orbs
             ambientOrbs.forEach((orb, index) => {
                 const factor = (index + 1) * 12;
                 orb.style.transform = `translate(${(x * factor).toFixed(1)}px, ${(y * factor).toFixed(1)}px)`;
@@ -314,12 +334,56 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         heroSection.addEventListener('mouseleave', () => {
-            heroBgMedias.forEach((bg) => {
-                bg.style.transform = '';
-            });
             ambientOrbs.forEach((orb) => {
                 orb.style.transform = '';
             });
         });
+    }
+
+    /* ----------------------------------------------------------
+       9. SCROLL REVEAL (glass cards fade/blur in as they enter view)
+       ---------------------------------------------------------- */
+    const revealElements = document.querySelectorAll('.reveal');
+
+    if ('IntersectionObserver' in window && revealElements.length > 0) {
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('reveal-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+    } else {
+        revealElements.forEach(el => el.classList.add('reveal-visible'));
+    }
+
+    /* ----------------------------------------------------------
+       10. AURORA BACKDROP SCROLL PARALLAX
+       The fixed floating blobs drift at different speeds as the
+       page scrolls for a layered depth effect.
+       ---------------------------------------------------------- */
+    const auroraBlobs = document.querySelectorAll('.aurora-blob');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!prefersReducedMotion && auroraBlobs.length) {
+        let ticking = false;
+
+        function updateParallax() {
+            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+            auroraBlobs.forEach((blob, i) => {
+                blob.style.translate = `0 ${(scrollY * (0.04 + i * 0.02)).toFixed(1)}px`;
+            });
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        }, { passive: true });
     }
 });

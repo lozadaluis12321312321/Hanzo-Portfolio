@@ -548,7 +548,7 @@ body,
 }
 
 /* ==========================================================
-   HERO / HOME SECTION (Bg1 in Light Mode, Bg2 in Dark Mode)
+   HERO / HOME SECTION
    ========================================================== */
 .hero-section {
     min-height: calc(100vh - 76px);
@@ -560,75 +560,6 @@ body,
     overflow: hidden;
     background-color: var(--bg-page);
     transition: var(--transition-theme);
-}
-
-/* Layered Animated Background Media Elements */
-.hero-bg-media {
-    position: absolute;
-    top: -40px;
-    left: -40px;
-    right: -40px;
-    bottom: -40px;
-    z-index: 0;
-    animation: heroBackgroundMorph 26s ease-in-out infinite alternate;
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    transform: scale(1.03);
-    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.7s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform, opacity, filter;
-}
-
-/* Light Mode Background: Bg1.jpg */
-.hero-bg-light {
-    background-image: url('images/Bg1.jpg');
-    filter: brightness(0.96) contrast(1.04);
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Dark Mode Background: Bg2.jpg */
-.hero-bg-dark {
-    background-image: url('images/Bg2.jpg');
-    filter: grayscale(100%) brightness(0.68) contrast(1.15);
-    opacity: 0;
-    visibility: hidden;
-}
-
-/* When Dark Theme is Active: Smooth Crossfade to Bg2 */
-[data-theme="dark"] .hero-bg-light {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
-[data-theme="dark"] .hero-bg-dark {
-    opacity: 1;
-    visibility: visible;
-}
-
-@keyframes heroBackgroundMorph {
-    0% {
-        transform: scale(1.02) translate(0, 0);
-    }
-    50% {
-        transform: scale(1.07) translate(-12px, 10px);
-    }
-    100% {
-        transform: scale(1.04) translate(10px, -8px);
-    }
-}
-
-/* Atmospheric Monochrome Ambient Overlay */
-.hero-bg-overlay {
-    position: absolute;
-    inset: 0;
-    background: var(--hero-overlay-gradient);
-    backdrop-filter: blur(1.5px);
-    -webkit-backdrop-filter: blur(1.5px);
-    z-index: 1;
-    pointer-events: none;
-    transition: background 0.5s ease;
 }
 
 /* Floating Ambient Smoked Silver Glowing Orbs */

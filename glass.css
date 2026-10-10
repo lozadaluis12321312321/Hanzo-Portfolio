@@ -1,0 +1,550 @@
+/* ==========================================================
+   CREATIVE GLASS REDESIGN & FLOATING ANIMATION LAYER
+   Loaded after styles.css. Adds:
+   1. Global fixed aurora backdrop (floating gradient blobs)
+   2. Translucent sections so the aurora shows through every glass card
+   3. Premium glass upgrades (gradient hairline borders, inner highlights,
+      button sheen) for nav, cards, pills, buttons & inputs
+   4. Gentle idle floating animations (staggered via data-float)
+   5. Scroll-reveal entrance animations (.reveal / .reveal-visible)
+   6. Hackathon certificate variant (green accent) & "New" project badge
+   7. Responsive tweaks & reduced-motion safety
+   ========================================================== */
+
+:root {
+    --aurora-1: rgba(14, 165, 233, 0.42);
+    --aurora-2: rgba(168, 85, 247, 0.32);
+    --aurora-3: rgba(34, 197, 94, 0.30);
+    --aurora-4: rgba(251, 191, 36, 0.26);
+    --glass-highlight: rgba(255, 255, 255, 0.85);
+    --glass-edge: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.25) 40%, rgba(14, 165, 233, 0.45) 100%);
+    --hack-green: #16a34a;
+    --hack-green-soft: rgba(34, 197, 94, 0.16);
+    --hack-green-glow: rgba(34, 197, 94, 0.38);
+    --section-veil: rgba(240, 249, 255, 0.35);
+}
+
+[data-theme="dark"] {
+    --aurora-1: rgba(56, 189, 248, 0.22);
+    --aurora-2: rgba(168, 85, 247, 0.20);
+    --aurora-3: rgba(34, 197, 94, 0.16);
+    --aurora-4: rgba(244, 114, 182, 0.14);
+    --glass-highlight: rgba(255, 255, 255, 0.35);
+    --glass-edge: linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.08) 40%, rgba(56, 189, 248, 0.35) 100%);
+    --hack-green: #4ade80;
+    --hack-green-soft: rgba(74, 222, 128, 0.14);
+    --hack-green-glow: rgba(74, 222, 128, 0.32);
+    --section-veil: rgba(9, 9, 11, 0.35);
+}
+
+/* ---------- 1. Global Aurora Backdrop ---------- */
+.aurora-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.aurora-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.9;
+    will-change: transform;
+    animation: auroraDrift 26s ease-in-out infinite alternate;
+    transition: background 0.6s ease;
+}
+
+.aurora-blob-1 { width: 55vw; height: 55vw; top: -18vw; left: -12vw; background: var(--aurora-1); animation-duration: 28s; }
+.aurora-blob-2 { width: 45vw; height: 45vw; top: 30vh; right: -15vw; background: var(--aurora-2); animation-duration: 34s; animation-delay: -8s; }
+.aurora-blob-3 { width: 40vw; height: 40vw; bottom: -14vw; left: 20vw; background: var(--aurora-3); animation-duration: 31s; animation-delay: -15s; }
+.aurora-blob-4 { width: 30vw; height: 30vw; top: 55vh; left: 45vw; background: var(--aurora-4); animation-duration: 24s; animation-delay: -4s; }
+
+@keyframes auroraDrift {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    33%  { transform: translate3d(6vw, -4vh, 0) scale(1.08); }
+    66%  { transform: translate3d(-4vw, 6vh, 0) scale(0.94); }
+    100% { transform: translate3d(3vw, 2vh, 0) scale(1.04); }
+}
+
+/* ---------- 2. Let the aurora show through ---------- */
+.hero-section,
+.section,
+.footer {
+    position: relative;
+    z-index: 1;
+}
+
+/* Hero floats directly over the aurora (no photo backgrounds) */
+.hero-section {
+    background-color: transparent;
+}
+
+.about-section,
+.skills-section,
+.cert-section,
+.projects-section,
+.contact-section {
+    background: var(--section-veil);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+
+.footer {
+    background-color: var(--section-veil);
+}
+
+/* ---------- 3. Premium Glass Upgrades ---------- */
+
+/* Floating pill navbar */
+.header {
+    background-color: transparent;
+    border-bottom: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding: 12px 0;
+}
+
+.nav-container {
+    position: relative;
+    background: var(--nav-bg);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1.5px solid var(--hero-glass-border);
+    border-radius: var(--radius-full);
+    padding: 10px 14px 10px 22px;
+    width: 92%;
+    box-shadow: var(--shadow-glass-elevated), inset 0 1px 1px var(--glass-highlight);
+    transition: var(--transition-theme);
+}
+
+.nav-link.active {
+    background: var(--glass-bg-subtle);
+    box-shadow: inset 0 1px 1px var(--glass-highlight), 0 4px 14px var(--accent-glow);
+    border: 1px solid var(--glass-border-sky);
+}
+
+/* Glass cards: deeper frost + inner highlight */
+.skill-card,
+.project-card,
+.info-card,
+.about-card-visual,
+.cert-details-card,
+.cert-card-inner,
+.contact-info-panel,
+.contact-form-panel,
+.cert-modal-dialog {
+    position: relative;
+    isolation: isolate;
+    background-image: linear-gradient(145deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 55%);
+    box-shadow: var(--shadow-glass), inset 0 1px 1.5px var(--glass-highlight), inset 0 -1px 1px rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .skill-card,
+[data-theme="dark"] .project-card,
+[data-theme="dark"] .info-card,
+[data-theme="dark"] .about-card-visual,
+[data-theme="dark"] .cert-details-card,
+[data-theme="dark"] .cert-card-inner,
+[data-theme="dark"] .contact-info-panel,
+[data-theme="dark"] .contact-form-panel,
+[data-theme="dark"] .cert-modal-dialog {
+    background-image: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 55%);
+}
+
+/* Gradient hairline edge that lights up on hover */
+.skill-card::after,
+.project-card::after,
+.info-card::after,
+.about-card-visual::after,
+.cert-details-card::after,
+.contact-info-panel::after,
+.contact-form-panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: var(--glass-edge);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    z-index: 3;
+}
+
+.skill-card:hover::after,
+.project-card:hover::after,
+.info-card:hover::after,
+.about-card-visual:hover::after,
+.cert-details-card:hover::after,
+.contact-info-panel:hover::after,
+.contact-form-panel:hover::after {
+    opacity: 1;
+}
+
+@keyframes glassSweep {
+    from { left: -80%; }
+    to   { left: 140%; }
+}
+
+/* Skill icon boxes: frosted lenses with glow halo + bob */
+.skill-icon-box {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.6), var(--accent-sky-subtle));
+    box-shadow: inset 0 1px 1px var(--glass-highlight), 0 6px 18px var(--accent-glow);
+    animation: iconBob 5s ease-in-out infinite;
+}
+
+[data-theme="dark"] .skill-icon-box {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.03));
+}
+
+.skill-card[data-float="2"] .skill-icon-box { animation-delay: -1.6s; }
+.skill-card[data-float="3"] .skill-icon-box { animation-delay: -3.2s; }
+
+@keyframes iconBob {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-5px) rotate(-3deg); }
+}
+
+.skill-card:hover .skill-icon-box {
+    animation-play-state: paused;
+    transform: translateY(-4px) scale(1.08) rotate(-4deg);
+}
+
+/* Pills & tags get frosted glass treatment */
+.tech-tag,
+.comp-tag,
+.provider-pill,
+.section-badge,
+.hero-badge,
+.skill-cert-badge {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: inset 0 1px 1px var(--glass-highlight), 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.tech-tag:hover,
+.comp-tag:hover {
+    transform: translateY(-2px);
+    box-shadow: inset 0 1px 1px var(--glass-highlight), 0 6px 14px var(--accent-glow);
+}
+
+/* Inputs as frosted glass */
+.form-group input,
+.form-group textarea {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: inset 0 1px 1px var(--glass-highlight);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    box-shadow: inset 0 1px 1px var(--glass-highlight), 0 0 0 4px var(--accent-sky-subtle), 0 8px 24px var(--accent-glow);
+}
+
+/* Primary buttons: glossy glass sheen */
+.btn-primary {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 24px var(--accent-glow-strong), inset 0 1px 1px rgba(255, 255, 255, 0.55);
+}
+
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+    transform: skewX(-20deg);
+    pointer-events: none;
+}
+
+.btn-primary:hover::after {
+    animation: glassSweep 0.75s ease forwards;
+}
+
+/* ---------- 4. Idle Floating Animations ---------- */
+@keyframes floatSoft {
+    0%, 100% { transform: translateY(0px); }
+    50%      { transform: translateY(-7px); }
+}
+
+@keyframes floatSoftRot {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50%      { transform: translateY(-7px) rotate(0.6deg); }
+}
+
+/* Float only when the element isn't being hovered (hover uses its own transform) */
+[data-float]:not(:hover) {
+    animation: floatSoft 6s ease-in-out infinite;
+}
+
+[data-float="2"]:not(:hover) { animation-duration: 7.2s; animation-delay: -2s; }
+[data-float="3"]:not(:hover) { animation-duration: 6.6s; animation-delay: -4s; animation-name: floatSoftRot; }
+
+/* Hero panel & cert cards float gently */
+.hero-glass-panel {
+    animation: floatSoft 8s ease-in-out infinite;
+}
+
+.cert-card-3d {
+    animation: floatSoftRot 7.5s ease-in-out infinite;
+}
+
+.cert-card-container:hover .cert-card-3d {
+    animation: none;
+}
+
+.hero-badge-ribbon,
+.cert-badge-ribbon {
+    animation: floatSoft 5s ease-in-out infinite;
+    animation-delay: -1s;
+}
+
+.cert-gold-seal {
+    animation: floatSoft 4.4s ease-in-out infinite !important;
+    animation-delay: -2.4s !important;
+}
+
+/* Hero seal is horizontally centered via translateX, so keep that in its float */
+.hero-status-seal {
+    animation: floatSeal 4.4s ease-in-out infinite !important;
+    animation-delay: -2.4s !important;
+}
+
+@keyframes floatSeal {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%      { transform: translateX(-50%) translateY(-6px); }
+}
+
+/* Floating cert stat pills under the section header */
+.cert-stats-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 26px;
+}
+
+.cert-stat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    border-radius: var(--radius-full);
+    background: var(--glass-bg-subtle);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1.5px solid var(--hero-glass-border);
+    box-shadow: var(--shadow-glass), inset 0 1px 1px var(--glass-highlight);
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text-body);
+    transition: var(--transition-smooth), var(--transition-theme);
+}
+
+.cert-stat-pill strong {
+    font-size: 1.05rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-sky-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.cert-stat-pill:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: var(--shadow-glass-hover), inset 0 1px 1px var(--glass-highlight);
+}
+
+/* ---------- 5. Scroll Reveal ---------- */
+.reveal {
+    opacity: 0;
+    transform: translateY(28px) scale(0.985);
+    filter: blur(6px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.8s ease;
+}
+
+/* While hidden, suspend idle float so the entrance transform wins */
+.reveal:not(.reveal-visible)[data-float] {
+    animation: none;
+}
+
+.reveal.reveal-visible {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+}
+
+/* Stagger siblings inside grids */
+.skills-grid .reveal:nth-child(2),  .projects-grid .reveal:nth-child(2),  .about-info-grid .reveal:nth-child(2) { transition-delay: 0.08s; }
+.skills-grid .reveal:nth-child(3),  .projects-grid .reveal:nth-child(3),  .about-info-grid .reveal:nth-child(3) { transition-delay: 0.16s; }
+.skills-grid .reveal:nth-child(4),  .projects-grid .reveal:nth-child(4) { transition-delay: 0.24s; }
+.skills-grid .reveal:nth-child(5) { transition-delay: 0.32s; }
+.skills-grid .reveal:nth-child(6) { transition-delay: 0.40s; }
+.skills-grid .reveal:nth-child(7) { transition-delay: 0.48s; }
+.skills-grid .reveal:nth-child(8) { transition-delay: 0.56s; }
+.skills-grid .reveal:nth-child(9) { transition-delay: 0.64s; }
+
+/* ---------- 6. Hackathon Cert Variant & New Project Badge ---------- */
+.cert-showcase-hackathon {
+    margin-top: 56px;
+    padding-top: 56px;
+    border-top: 1px dashed var(--glass-border-accent);
+    grid-template-columns: 1.15fr 1.05fr;
+}
+
+.cert-stage-glow-green {
+    background: radial-gradient(circle, var(--hack-green-glow) 0%, rgba(34, 197, 94, 0.08) 50%, transparent 70%);
+}
+
+.cert-image-stage-green {
+    background: linear-gradient(135deg, #bbf7d0 0%, #16a34a 30%, #065f46 60%, #86efac 100%);
+    background-size: 250% 250%;
+    box-shadow: 0 14px 40px var(--hack-green-glow), 0 0 25px var(--hack-green-soft);
+}
+
+.cert-seal-green {
+    color: var(--hack-green);
+    border-color: var(--hack-green) !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), var(--hack-green-soft)) !important;
+}
+
+[data-theme="dark"] .cert-seal-green {
+    background: linear-gradient(135deg, rgba(20, 83, 45, 0.85), rgba(9, 9, 11, 0.9)) !important;
+}
+
+.status-dot-green {
+    background-color: var(--hack-green) !important;
+    box-shadow: 0 0 10px var(--hack-green) !important;
+}
+
+.provider-pill-team {
+    color: var(--hack-green);
+    border-color: var(--hack-green);
+    background: var(--hack-green-soft);
+}
+
+.cert-details-hackathon .cert-title-accent {
+    background: linear-gradient(135deg, var(--hack-green) 0%, #86efac 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.cert-details-hackathon .comp-tag svg,
+.cert-details-hackathon .code-display-wrap svg {
+    color: var(--hack-green);
+    flex-shrink: 0;
+}
+
+/* Project "New" badge & featured card ring */
+.project-new-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #052e16;
+    background: linear-gradient(135deg, #bbf7d0, #4ade80);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    box-shadow: 0 6px 18px var(--hack-green-glow), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+    animation: floatSoft 4s ease-in-out infinite;
+}
+
+.project-new-badge .status-pulse-dot {
+    background-color: #052e16;
+    box-shadow: 0 0 8px #16a34a;
+    width: 6px;
+    height: 6px;
+}
+
+.project-card-featured {
+    box-shadow: var(--shadow-glass-elevated), 0 0 0 1px var(--glass-border-sky), 0 0 40px var(--accent-glow), inset 0 1px 1.5px var(--glass-highlight);
+}
+
+/* Four projects: balanced 2x2 grid with roomier previews on desktop */
+.projects-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr));
+}
+
+.project-image-box {
+    height: 230px;
+}
+
+/* ---------- 7. Responsive & Reduced Motion ---------- */
+@media (max-width: 992px) {
+    .cert-showcase-hackathon {
+        grid-template-columns: 1fr;
+    }
+
+    /* On stacked layout, show the certificate before its details */
+    .cert-showcase-hackathon .cert-card-container {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .header { padding: 8px 0; }
+
+    .nav-container {
+        width: 94%;
+        padding: 8px 10px 8px 16px;
+        border-radius: var(--radius-lg);
+    }
+
+    .nav-links {
+        top: calc(100% + 8px);
+        left: 0;
+        width: 100%;
+        border-radius: var(--radius-lg);
+        border: 1.5px solid var(--hero-glass-border);
+    }
+
+    .aurora-blob { filter: blur(50px); }
+
+    .cert-stats-row { gap: 8px; }
+    .cert-stat-pill { font-size: 0.78rem; padding: 7px 14px; }
+
+    .cert-showcase-hackathon {
+        margin-top: 40px;
+        padding-top: 40px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .aurora-blob,
+    [data-float],
+    .hero-glass-panel,
+    .cert-card-3d,
+    .hero-badge-ribbon,
+    .cert-badge-ribbon,
+    .hero-status-seal,
+    .cert-gold-seal,
+    .skill-icon-box,
+    .project-new-badge {
+        animation: none !important;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: none;
+        filter: none;
+        transition: none;
+    }
+}
