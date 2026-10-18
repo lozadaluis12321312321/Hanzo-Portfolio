@@ -487,6 +487,38 @@
     height: 230px;
 }
 
+/* Featured project spans the full row as a wide horizontal showcase */
+@media (min-width: 993px) {
+    .project-card-featured {
+        grid-column: 1 / -1;
+        flex-direction: row;
+    }
+
+    .project-card-featured .project-image-box {
+        flex: 0 0 52%;
+        height: auto;
+        min-height: 320px;
+        border-bottom: none;
+        border-right: 1px solid var(--glass-border);
+    }
+
+    .project-card-featured .project-img {
+        object-position: top center;
+    }
+
+    .project-card-featured .project-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 34px 36px;
+    }
+
+    .project-card-featured .project-title {
+        font-size: 1.45rem;
+    }
+}
+
 /* ---------- 7. Responsive & Reduced Motion ---------- */
 @media (max-width: 992px) {
     .cert-showcase-hackathon {
