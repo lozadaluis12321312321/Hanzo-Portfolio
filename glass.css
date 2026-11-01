@@ -519,6 +519,261 @@
     }
 }
 
+/* ---------- 6b. Project Video Demos (Play Button + Glass Player) ---------- */
+:root {
+    --play-red: #ef4444;
+    --play-red-glow: rgba(239, 68, 68, 0.45);
+}
+
+/* Floating pulsing play button centered on the project preview */
+.project-play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 64px;
+    height: 64px;
+    margin: -32px 0 0 -32px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.project-card:hover .project-play-btn,
+.project-play-btn:focus-visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Mobile has no hover: always show a smaller play button */
+@media (hover: none) {
+    .project-play-btn {
+        opacity: 1;
+        transform: scale(0.9);
+    }
+}
+
+.play-core {
+    position: relative;
+    z-index: 2;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.08));
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    border: 1.5px solid rgba(255, 255, 255, 0.75);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+    transition: var(--transition-smooth);
+}
+
+.play-core svg {
+    margin-left: 3px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+.project-play-btn:hover .play-core {
+    background: linear-gradient(145deg, var(--play-red), #b91c1c);
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 14px 36px var(--play-red-glow), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+    transform: scale(1.08);
+}
+
+/* Expanding sonar rings behind the play button */
+.play-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.75);
+    animation: playRing 2.4s ease-out infinite;
+    pointer-events: none;
+}
+
+.play-ring-2 {
+    animation-delay: -1.2s;
+}
+
+@keyframes playRing {
+    0%   { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(2); opacity: 0; }
+}
+
+/* Dim + blur the preview slightly when hovering so the play button pops */
+.project-image-box::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(9, 9, 11, 0.35) 0%, rgba(9, 9, 11, 0.05) 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.project-card:hover .project-image-box:has(.project-play-btn)::after {
+    opacity: 1;
+}
+
+/* Footer with two actions: Watch Demo pill + Live Site link */
+.project-footer-actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.project-btn-video {
+    font-family: var(--font-family);
+    border: 1px solid var(--glass-border-accent);
+    background: var(--glass-bg-subtle);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 7px 14px 7px 8px;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    box-shadow: inset 0 1px 1px var(--glass-highlight), 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.project-btn-video:hover {
+    color: var(--text-main);
+    border-color: var(--play-red);
+    box-shadow: inset 0 1px 1px var(--glass-highlight), 0 6px 18px var(--play-red-glow);
+    transform: translateY(-2px);
+}
+
+.video-btn-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, var(--play-red), #b91c1c);
+    color: #fff;
+    box-shadow: 0 3px 10px var(--play-red-glow);
+    transition: transform 0.25s ease;
+}
+
+.video-btn-icon svg { margin-left: 1px; }
+
+.project-btn-video:hover .video-btn-icon {
+    transform: scale(1.12);
+}
+
+/* Video Lightbox */
+.video-modal-dialog {
+    max-width: 1040px;
+}
+
+.video-live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-dot-red {
+    background-color: var(--play-red) !important;
+    box-shadow: 0 0 10px var(--play-red) !important;
+}
+
+.video-modal-body {
+    padding: 22px;
+    background: var(--bg-page);
+    position: relative;
+    overflow: hidden;
+}
+
+.video-modal-body::before {
+    content: '';
+    position: absolute;
+    inset: -40%;
+    background: conic-gradient(from 0deg, var(--aurora-1), var(--aurora-2), var(--aurora-3), var(--aurora-4), var(--aurora-1));
+    filter: blur(60px);
+    opacity: 0.55;
+    animation: spinSlow 18s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes spinSlow {
+    to { transform: rotate(360deg); }
+}
+
+.video-frame-wrap {
+    position: relative;
+    z-index: 1;
+}
+
+.video-frame-glow {
+    position: absolute;
+    inset: -6px;
+    border-radius: calc(var(--radius-lg) + 6px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.1) 40%, var(--play-red-glow) 100%);
+    filter: blur(6px);
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+[data-theme="dark"] .video-frame-glow {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.05) 40%, var(--play-red-glow) 100%);
+}
+
+.video-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: #000;
+    border: 1.5px solid var(--hero-glass-border);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), inset 0 1px 1px var(--glass-highlight);
+}
+
+.video-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.video-modal-footer {
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.video-modal-desc {
+    flex: 1;
+    min-width: 240px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .project-play-btn,
+    .play-core {
+        width: 52px;
+        height: 52px;
+    }
+
+    .project-play-btn { margin: -26px 0 0 -26px; }
+
+    .video-modal-body { padding: 12px; }
+
+    .video-modal-footer .modal-verify-btn { width: 100%; }
+}
+
 /* ---------- 7. Responsive & Reduced Motion ---------- */
 @media (max-width: 992px) {
     .cert-showcase-hackathon {
@@ -569,7 +824,9 @@
     .hero-status-seal,
     .cert-gold-seal,
     .skill-icon-box,
-    .project-new-badge {
+    .project-new-badge,
+    .play-ring,
+    .video-modal-body::before {
         animation: none !important;
     }
 

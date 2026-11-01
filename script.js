@@ -7,7 +7,7 @@
  * 3. Scroll spy (active navigation link highlight)
  * 4. Contact form submission & feedback
  * 5. Interactive 3D Perspective Card Tilt & Holographic Glare
- * 6. Certificate Lightbox Modal & Zoom
+ * 6. Certificate Lightbox Modal & Zoom + Project Video Demo Lightbox
  * 7. Copy Credential Code to Clipboard
  * 8. Dynamic Hero Ambient Orb Parallax Interaction
  * 9. Scroll Reveal Entrance Animations
@@ -269,6 +269,70 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && certModal && certModal.classList.contains('active')) {
             closeCertModal();
+        }
+    });
+
+    /* ----------------------------------------------------------
+       6b. PROJECT VIDEO DEMO LIGHTBOX (YouTube)
+       Any .video-modal-trigger with data-video-* attributes opens the
+       shared glass player. The iframe src is only set while open so
+       playback stops (and no network is used) when closed.
+       ---------------------------------------------------------- */
+    const videoModal = document.getElementById('videoModal');
+    const videoModalFrame = document.getElementById('videoModalFrame');
+    const videoModalTitle = document.getElementById('videoModalTitle');
+    const videoModalBadge = document.getElementById('videoModalBadge');
+    const videoModalDesc = document.getElementById('videoModalDesc');
+    const videoModalLink = document.getElementById('videoModalLink');
+    const videoModalClose = document.getElementById('videoModalClose');
+    const videoModalBackdrop = document.getElementById('videoModalBackdrop');
+    let lastVideoTrigger = null;
+
+    function openVideoModal(trigger) {
+        if (!videoModal || !videoModalFrame) return;
+        const d = trigger.dataset;
+        if (!d.videoId) return;
+
+        lastVideoTrigger = trigger;
+        videoModalFrame.src = `https://www.youtube-nocookie.com/embed/${d.videoId}?autoplay=1&rel=0&modestbranding=1`;
+        videoModalFrame.title = `${d.videoTitle || 'Project'} video demo`;
+        if (videoModalTitle) videoModalTitle.textContent = d.videoTitle || 'Project Walkthrough';
+        if (videoModalBadge) {
+            videoModalBadge.innerHTML = `<span class="status-pulse-dot status-dot-red"></span>${d.videoBadge || 'Video Demo'}`;
+        }
+        if (videoModalDesc) videoModalDesc.textContent = d.videoDesc || '';
+        if (videoModalLink) videoModalLink.href = `https://youtu.be/${d.videoId}`;
+
+        videoModal.classList.add('active');
+        videoModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        if (videoModalClose) videoModalClose.focus();
+    }
+
+    function closeVideoModal() {
+        if (!videoModal) return;
+        videoModal.classList.remove('active');
+        videoModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        // Clear src after the fade-out so audio stops immediately but the frame doesn't flash
+        setTimeout(() => { if (videoModalFrame) videoModalFrame.src = ''; }, 250);
+        if (lastVideoTrigger) lastVideoTrigger.focus();
+    }
+
+    document.querySelectorAll('.video-modal-trigger').forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openVideoModal(trigger);
+        });
+    });
+
+    if (videoModalClose) videoModalClose.addEventListener('click', closeVideoModal);
+    if (videoModalBackdrop) videoModalBackdrop.addEventListener('click', closeVideoModal);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && videoModal && videoModal.classList.contains('active')) {
+            closeVideoModal();
         }
     });
 
